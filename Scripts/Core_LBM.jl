@@ -8,6 +8,7 @@ first derived by Rick Salmon doi:10.1357/002224099764805174
 println("Hello world!")
 A = [1 1; 1 1]
 include("equilibrium.jl")
+include("macroquantities.jl")
 C = zeros(2,2)
 B = equiliriumnogd2q9(A, C, C)
 

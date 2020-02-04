@@ -36,11 +36,11 @@ julia> println(C[1, :, :])
 """
 function equiliriumnogd2q9(height, velocity_x, velocity_y)
 
-    inputsize = size(height)
+    rows, cols = size(height)
     
-    Equi_dist = zeros(9, inputsize[1], inputsize[2])
+    Equi_dist = zeros(9, rows, cols)
     # The only special case is the one of the zero velocity component
-    Equi_dist[1,:,:] = Weightsd2q9[1] .* height .*(9/4 * ones(inputsize) - 3/2 * (velocity_x.*velocity_x .+ velocity_y.*velocity_y))
+    Equi_dist[1,:,:] = Weightsd2q9[1] .* height .*(9/4 * ones(rows, cols) - 3/2 * (velocity_x.*velocity_x .+ velocity_y.*velocity_y))
     # All other 8 components are calculated with this formular
     for lat_vel = 2:9
         Equi_dist[lat_vel, :, :] = Weightsd2q9[lat_vel] .* height 
@@ -76,11 +76,11 @@ julia> println(C[1, :, :])
 """
 function equiliriumd2q9(height, velocity_x, velocity_y, gravity)
     # Set up the output array
-    inputsize = size(height)
-    Equi_dist = Array{Float64,3}(undef, 9, inputsize[1], inputsize[2])
+    rows, cols = size(height)
+    Equi_dist = Array{Float64,3}(undef, 9, rows, cols)
 
     # The only special case is the one of the zero velocity component
-    Equi_dist[1,:,:] = Weightsd2q9[1] .* height .* (9/4 * ones(inputsize) - 15/8 * gravity * height - 
+    Equi_dist[1,:,:] = Weightsd2q9[1] .* height .* (9/4 * ones(rows, cols) - 15/8 * gravity * height - 
                                                     3/2 * (velocity_x.*velocity_x .+ velocity_y.*velocity_y))
     # All other 8 components are calculated with this formular
     for lat_vel  = 2:9
@@ -116,8 +116,8 @@ julia> println(C[1, :])
 """
 function equiliriumd1q3(height, velocity, gravity)
     # Set up the output array based on input
-    inputsize = size(height)
-    Equi_dist = Array{Float64,2}(undef, 3, inputsize[2])
+    rows, cols = size(height)
+    Equi_dist = Array{Float64,2}(undef, 3, cols)
 
     # Components of the equilibrium distribution
     Equi_dist[1,:] = height - 1/2 * gravity * height.^2 - height .* velocity .* velocity
