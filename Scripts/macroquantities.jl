@@ -56,7 +56,7 @@ function momentsd2q9(height, velocity_x, velocity_y, distribution)
     height = sumresult
     velocity_x = sumvelx./sumresult
     velocity_y = sumvely./sumresult
-    # Return the computed values for the
+    # Return the computed values for the height velocity vector
     return height, velocity_x, velocity_y
 end
 
@@ -102,6 +102,6 @@ function momentsd1q3(height, velocity, distribution)
     height = sumresult
     velocity = sumvel./sumresult
     
-    # Return the computed values for the
+    # Return the computed values for height and velocity
     return height, velocity
 end
