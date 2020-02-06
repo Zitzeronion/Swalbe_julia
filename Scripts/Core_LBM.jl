@@ -7,6 +7,7 @@ first derived by Rick Salmon doi:10.1357/002224099764805174
 
 println("Hello world!")
 A = [1 1; 1 1]
+include("weightsandvelocities.jl")
 include("equilibrium.jl")
 include("macroquantities.jl")
 C = zeros(2,2)
