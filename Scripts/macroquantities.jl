@@ -5,11 +5,6 @@ The sum of distribution function times the lattice velocity is the macroscopic v
 Theoretically this quantities are the moments of the distribution function.
 """
 
-# D2Q9 lattice velocity vector: (0,0) (1,0) (0,1) ....
-Cd2q9 = [0 1 0 -1 0 1 -1 -1 1; 0 0 1 0 -1 1 1 -1 -1]
-# D1Q3 lattice velocity
-Cd1q3 = [0 1 -1]
-
 
 """
     momentsd2q9(height, velocity_x, velocity_y, distribution)

@@ -53,3 +53,14 @@ function initialstructure(L)
     return powerspectrum, df
 end
    
+function spectrumdeterministic(L, N, t)
+    powerspec, df = initialstructure(L)
+    q = range(0.0001, stop = N*2.4, length = L)
+    spectrum = powerspec .* exp.(2*omega(q)*t) 
+    return spectrum, q
+end
+
+function justexponental(q)
+    y = [exp.(2*omega(q)*2) exp.(2*omega(q)*2) + q.^2 ./omega(q).*(exp.(2*omega(q)*2).-1)]
+    return y
+end
