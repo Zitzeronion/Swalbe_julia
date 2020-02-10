@@ -7,9 +7,14 @@ first derived by Rick Salmon doi:10.1357/002224099764805174
 
 println("Hello world!")
 A = [1 1; 1 1]
+
+τ = 1.0
+ω = 1/τ
+
 include("weightsandvelocities.jl")
 include("Features/equilibrium.jl")
 include("Features/macroquantities.jl")
+include("Features/collide.jl")
 C = zeros(2,2)
 B = equiliriumnogd2q9(A, C, C)
 
