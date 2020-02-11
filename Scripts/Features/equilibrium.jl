@@ -25,6 +25,9 @@ julia> C = equiliriumnogd2q9(A,B,B);
 julia> println(C[1, :, :])
 [1.0 1.0; 1.0 1.0]
 ```
+
+# Publication
+- `A modified lattice Boltzmann model for shallow water flows over complex topography`: Ping Huang, doi:10.1002/fld.3991
 """
 function equiliriumnogd2q9(height, velocity_x, velocity_y)
 
@@ -49,8 +52,7 @@ end
 
 Computes the `equilibrium distribution function` for D2Q9 shallow water lattice Boltzmann
 based on `height`, `velocity_x` and `velocity_y` fields with gravity.
-See also: [`equiliriumnogd2q9`](@ref), [`equiliriumd1q3`](@ref), doi:https://doi.org/10.1357/002224099764805174.
-
+See also: [`equiliriumnogd2q9`](@ref), [`equiliriumd1q3`](@ref), 
 # Arguments
 - `height::Array{Float64,2}` : `height` at every lattice node
 - `velocity_x::Array{Float64,2}` : `x`-component of the macroscopic velocity
@@ -65,6 +67,9 @@ julia> C = equiliriumd2q9(A,B,B,0.1);
 julia> println(C[1, :, :])
 [0.916667 0.916667; 0.916667 0.916667]
 ```
+
+# Publication
+- `The lattice Boltzmann method as a basis for ocean circulation modeling` : Rick Salmon, doi:https://doi.org/10.1357/002224099764805174.
 """
 function equiliriumd2q9(height, velocity_x, velocity_y, gravity)
     # Set up the output array
@@ -105,6 +110,9 @@ julia> C = equiliriumd1q3(A,B,0.1);
 julia> println(C[1, :])
 [0.916667 0.916667 0.916667 0.916667]
 ```
+
+# Publication
+- `Study of the 1D Lattice Boltzmann Shallow Water Equation and Its Coupling to Build a Canal Network` : Guo-Chopard forcing, doi:10.1016/j.jcp.2010.06.022
 """
 function equiliriumd1q3(height, velocity, gravity)
     # Set up the output array based on input

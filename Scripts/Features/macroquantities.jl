@@ -7,29 +7,36 @@ Theoretically this quantities are the moments of the distribution function.
 
 
 """
-    momentsd2q9(height, velocity_x, velocity_y, distribution)
+    momentsd2q9(height, velocity_x, velocity_y, forces_x, forces_y, distribution, kindofforce="WFM")
 
-Computes the macroscopic quantities `height` and `velocity` from a `distribution function`.
-See also: [`momentsguod2q9`](@ref), [`momentsd1q3`](@ref).
+Computes the macroscopic quantities `height` and `velocity` from a `distribution function` and if used `forces`.
+See also: [`collideSRTd2q9`](@ref)
 
 # Arguments
 - `height::Array{Float64,2}` : `height`-value at every lattice node, similar to density in standard lattice Boltzmann
 - `velocity_x::Array{Float64,2}` : The `x`-component of the macroscopic velocity
 - `velocity_y::Array{Float64,2}` : The `y`-component of the macroscopic velocity
-- `distribution::Array{Float64,3}` : Internal distribution function used for the lattice Boltzmann algorithm
+- `forces_x::Array{Float64,2}` : X-component of all applied `forces`
+- `forces_y::Array{Float64,2}` : Y-component of all applied `forces`
+- `distribution::Array{Float64,3}` : Internal distribution function used for the lattice Boltzmann method
+- `kindofforce::String` : Determines which forcing model is used, higher order forcing are included in the moment calculation
 
 # Examples
 ```jldoctest
-julia> A = [1.0 1.0; 1.0 1.0]; 
-julia> B = [0.0 0.0; 0.0 0.0];                  # example without velocity
-julia> D = fill(1.0, (9, 2, 2))
-julia> h_out,velx_out,vely_out = momentsd2q9(A,B,B,D); 
+julia> height = [1.0 1.0; 1.0 1.0]; 
+julia> velo = [0.0 0.0; 0.0 0.0];                           # example without velocity
+julia> distribution = fill(1.0, (9, 2, 2))
+julia> h_out,velx_out,vely_out = momentsd2q9(height, velo, velo, distribution, "Guo"); 
 julia> println(h_out)
 [9.0 9.0; 9.0 9.0]
 ```
 
+# Publication
+- `The lattice Boltzmann method as a basis for ocean circulation modeling` : Rick Salmon, doi:10.1357/002224099764805174.
+- `An evaluation of force terms in the lattice Boltzmann models in simulating shallow water flows over complex topography` : Weighting factor mode, doi:10.1002/fld.4726
+
 """
-function momentsd2q9(height, velocity_x, velocity_y, distribution)
+function momentsd2q9(height, velocity_x, velocity_y, forces_x, forces_y, distribution, kindofforce="WFM")
     # Get the size for the loops
     lat_vel, rows, cols = size(distribution)
 
@@ -37,6 +44,7 @@ function momentsd2q9(height, velocity_x, velocity_y, distribution)
     sumresult = zeros(rows, cols)
     sumvelx = zeros(rows, cols)
     sumvely = zeros(rows, cols)
+    
     # apparently Julia is fast when it comes to loops
     for node_x = 1:rows
         for node_y = 1:cols
@@ -47,10 +55,22 @@ function momentsd2q9(height, velocity_x, velocity_y, distribution)
             end
         end
     end
-    # Normalize the values according to standard LBM steps
-    height = sumresult
-    velocity_x = sumvelx./sumresult
-    velocity_y = sumvely./sumresult
+    # Compute the moments based on the forcing approach in collision kernel.
+    if kindofforce == "WFM"
+        # Normalize the values according to standard LBM
+        height = sumresult
+        velocity_x = sumvelx./sumresult
+        velocity_y = sumvely./sumresult
+
+    elseif kindofforce == "Buick" || kindofforce == "Guo"
+        height = sumresult
+        velocity_x = (sumvelx .+ (0.5 * forces_x))./sumresult
+        velocity_y = (sumvely .+ (0.5 * forces_y))./sumresult
+    
+    else
+        error("no active forcing scheme has been chosen, see collide.jl options are `WFM`, `Buick` and `Guo`")
+    end
+    
     # Return the computed values for the height velocity vector
     return height, velocity_x, velocity_y
 end
@@ -80,6 +100,9 @@ julia> h_out,velx_out,vely_out = momentsd2q9(A,B,B,Fx,Fy,D);
 julia> println(h_out)  
 [9.0 9.0; 9.0 9.0]
 ```
+
+# Publication
+
 
 """
 function momentsguod2q9(height, velocity_x, velocity_y, forces_x, forces_y, distribution)
@@ -130,6 +153,8 @@ julia> println(h_out)
 [3.0 3.0 3.0 3.0]
 ```
 
+# Publication
+- `Study of the 1D Lattice Boltzmann Shallow Water Equation and Its Coupling to Build a Canal Network` : Guo-Chopard forcing, doi:10.1016/j.jcp.2010.06.022
 """
 function momentsd1q3(height, velocity, distribution)
     # Get the size for the loops

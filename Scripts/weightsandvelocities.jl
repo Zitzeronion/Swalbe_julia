@@ -17,9 +17,16 @@ Cd1q3 = [0 1 -1]
 
 # Calculate force weighting based on doi:10.1002/fld.4726
 Forceweight = zeros(9)
+C² = zeros(9)
 for q in 2:9
-    Forceweight[q] = 3 * Weightsd2q9[q] ./ (Cd2q9[1,q]*Cd2q9[1,q] + Cd2q9[2,q]*Cd2q9[2,q])
+    C²[q] = Cd2q9[1,q]*Cd2q9[1,q] + Cd2q9[2,q]*Cd2q9[2,q]
+    Forceweight[q] = 3 * Weightsd2q9[q] ./ C²[q]
 end
+# This due to Zhous "centered based forcing", to switch back to the usual lattice Boltzmann, divide by 1 instead of Cd2q9[1,q]*Cd2q9[1,q] + Cd2q9[2,q]*Cd2q9[2,q]
+
+# Speed of sound and speed of sound squared
+cₛ = 1/sqrt(3)
+cₛ² = 1/3.0
 
 """
 Used in [`momentsd2q9`](@ref), [`equilibriumd2q9`](@ref).
