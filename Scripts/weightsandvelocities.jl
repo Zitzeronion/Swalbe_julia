@@ -16,11 +16,19 @@ Weightsd1q3 = [2/3 1/6 1/6]
 Cd1q3 = [0 1 -1]
 
 # Calculate force weighting based on doi:10.1002/fld.4726
+which = "Fancy"
 Forceweight = zeros(9)
 C² = zeros(9)
-for q in 2:9
-    C²[q] = Cd2q9[1,q]*Cd2q9[1,q] + Cd2q9[2,q]*Cd2q9[2,q]
-    Forceweight[q] = 3 * Weightsd2q9[q] ./ C²[q]
+if which == "Simple"
+    for q in 2:9
+        C²[q] = 1.0
+        Forceweight[q] = 3 * Weightsd2q9[q] ./ C²[q]
+    end
+elseif which == "Fancy"
+    for q in 2:9
+        C²[q] = Cd2q9[1,q]*Cd2q9[1,q] + Cd2q9[2,q]*Cd2q9[2,q]
+        Forceweight[q] = 3 * Weightsd2q9[q] ./ C²[q]
+    end
 end
 # This due to Zhous "centered based forcing", to switch back to the usual lattice Boltzmann, divide by 1 instead of Cd2q9[1,q]*Cd2q9[1,q] + Cd2q9[2,q]*Cd2q9[2,q]
 
